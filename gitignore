@@ -1,0 +1,7 @@
+.DS_Store?
+*~
+*.swp
+*.sqlite
+*.db
+Icon?
+Thumbs.db
