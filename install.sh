@@ -1,4 +1,11 @@
 #!/bin/bash
+cd $(dirname $0)
+echo -n "Updating git modules "
+git submodule init                         >/dev/null 2>&1 && echo -n ". "
+git submodule update                       >/dev/null 2>&1 && echo -n ". "
+git submodule foreach git submodule init   >/dev/null 2>&1 && echo -n ". "
+git submodule foreach git submodule update >/dev/null 2>&1 && echo -n ". "
+echo "done"
 
 for f in *; do
     [[ "${f}" = "${0}" ]] && continue
