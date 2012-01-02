@@ -1,0 +1,8 @@
+HISTFILE=$HOME/.$(basename $SHELL)_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+export PYTHONSTARTUP=$HOME/.pythonrc
+export EDITOR=vim
+
+export PATH=~/bin:$PATH

@@ -1,0 +1,93 @@
+# yaunj prompt theme
+
+prompt_yaunj_help() {
+    cat <<'EOF'
+This prompt is configurable through styles:
+
+    context: :prompt:yaunj
+
+    colors:
+        color-time - color used for displayed time
+        color-host - color used for hostname
+        color-ok - color used when last process had return code 0
+        color-not-ok - color used when return code is non-zero
+
+    strings:
+        str-title - string used in terminal title
+        str-ok - string displayed when last process had return code 0
+        str-nok-ok - string displayed when return code is non-zero
+        str-bg - prefix for number of background jobs
+
+You can set styles in the current terminal to test things out, values will be
+updated.
+
+Example:
+zstyle :prompt:yaunj str-ok :D
+EOF
+}
+
+prompt_yaunj_setup() {
+    autoload -Uz vcs_info
+    autoload -Uz add-zsh-hook
+
+    add-zsh-hook precmd prompt_yaunj_precmd
+}
+
+prompt_yaunj_update_title() {
+    # escape '%' chars in $1, make nonprintables visible
+    a=${(V)1//\%/\%\%}
+
+    # Truncate command, and join lines.
+    a=$(print -Pn "%40>...>$a" | tr -d "\n")
+
+    if [[ $TERM_PROGRAM == "Apple_Terminal" ]]; then
+        printf '\e]7;%s\a' "file://$HOST${PWD// /%20}"
+    else
+        case $TERM in
+            screen)
+                print -Pn "\ek$a:$3\e\\"      # screen title (in ^A")
+                ;;
+            *xterm*|*rxvt*)
+                print -Pn "\e]2;$2 | $a:$3\a" # plain xterm title
+                ;;
+        esac
+    fi
+}
+
+prompt_yaunj_precmd() {
+    local timecolor
+    local hostcolor
+    local okcolor
+    local badcolor
+    local okstr
+    local badstr
+    local bgstr
+    local titlestr
+
+    zstyle -s :prompt:yaunj color-time timecolor
+    timecolor=${timecolor:-'black'}
+    zstyle -s :prompt:yaunj color-host hostcolor
+    hostcolor=${hostcolor:-'yellow'}
+    zstyle -s :prompt:yaunj color-ok okcolor
+    okcolor=${okcolor:-'green'}
+    zstyle -s :prompt:yaunj color-not-ok badcolor
+    badcolor=${badcolor:-'red'}
+    zstyle -s :prompt:yaunj str-ok okstr
+    okstr=${okstr:-'✓'}
+    zstyle -s :prompt:yaunj str-not-ok badstr
+    badstr=${badstr:-'✗'}
+    zstyle -s :prompt:yaunj str-bg bgstr
+    bgstr=${bgstr:-'↯'}
+    zstyle -s :prompt:yaunj str-title titlestr
+    titlestr=${titlestr:-"$USER@%m"}
+
+    PROMPT="%F{$timecolor}%T %F{$hostcolor}%m%f:%U%~%u
+%(1j.$bgstr%j .)"'${scm_char}'"%(?.%F{$okcolor}$okstr%f.%F{$badcolor}$badstr%f) "
+    RPROMPT="%(?..%F{$badcolor}(%?%)%f) "'${vcs_info_msg_0_}'
+    SPROMPT="%F{$okcolor}%R → %F{$badcolor}%r%f (Yes, No, Abort, Edit) "
+
+    prompt_yaunj_update_title "zsh" "$titlestr" "%55<...<%~"
+    vcs_info
+}
+
+prompt_yaunj_setup "$@"
