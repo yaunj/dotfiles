@@ -5,3 +5,10 @@
 *.db
 Icon?
 Thumbs.db
+*.tar
+*.tar.gz
+*.tar.bz2
+*.pyc
+*.pyo
+*.so
+*.o
