@@ -31,6 +31,7 @@ prompt_yaunj_setup() {
     autoload -Uz add-zsh-hook
 
     add-zsh-hook precmd prompt_yaunj_precmd
+    add-zsh-hook preexec prompt_yaunj_preexec
 }
 
 prompt_yaunj_update_title() {
@@ -88,6 +89,13 @@ prompt_yaunj_precmd() {
 
     prompt_yaunj_update_title "zsh" "$titlestr" "%55<...<%~"
     vcs_info
+}
+
+prompt_yaunj_preexec() {
+    local titlestr
+    zstyle -s :prompt:yaunj str-title titlestr
+    titlestr=${titlestr:-"$USER@%m"}
+    prompt_yaunj_update_title "$1" "$titlestr" "%35<...<%~"
 }
 
 prompt_yaunj_setup "$@"
