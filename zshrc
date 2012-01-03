@@ -7,9 +7,10 @@ if [[ $(uname) = 'Darwin' ]]; then
     export __CF_USER_TEXT_ENCODING=0x1F5:0x8000100:0x8000100
 fi
 
-source .zsh/config.zsh
-source .zsh/aliases.zsh
-source .zsh/completion.zsh
+source $HOME/.env
+source $HOME/.zsh/config.zsh
+source $HOME/.zsh/aliases.zsh
+source $HOME/.zsh/completion.zsh
 
 # Plug and play
 if [[ -f /etc/zsh_command_not_found ]]; then

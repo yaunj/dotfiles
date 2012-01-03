@@ -1,5 +1,6 @@
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
+autoload run-help             # try pressing meta-h while writing a command
 autoload colors; colors;
 eval "$(dircolors -b)"
 
@@ -18,6 +19,7 @@ setopt cdable_vars            # try stuff
 setopt hist_ignore_all_dups   # no duplicates
 setopt hist_reduce_blanks     # no superfluous blanks
 setopt share_history          # share history between shells
+setopt extended_history       # timestamp, etc
 setopt hist_verify            # ask before performing !command
 setopt hist_ignore_space      # don't log lines starting with space
 
@@ -28,6 +30,8 @@ setopt local_traps            # allow functions to have local traps
 setopt prompt_subst           # do substitution for vars in prompt
 setopt correct                # spell corrections
 setopt complete_in_word
+
+setopt extended_glob
 
 test -f /etc/zsh_command_not_found && source /etc/zsh_command_not_found
 
