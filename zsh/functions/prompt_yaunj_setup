@@ -85,7 +85,8 @@ prompt_yaunj_precmd() {
     PROMPT="%F{$timecolor}%T %F{$hostcolor}%m%f:%U%~%u
 %(1j.$bgstr%j .)"'${scm_char}'"%(?.%F{$okcolor}$okstr%f.%F{$badcolor}$badstr%f) "
     RPROMPT="%(?..%F{$badcolor}(%?%)%f) "'${vcs_info_msg_0_}'
-    SPROMPT="%F{$okcolor}%R → %F{$badcolor}%r%f (Yes, No, Abort, Edit) "
+    SPROMPT="%F{$badcolor}%R%f → %F{$okcolor}%r%f \
+(%F{$okcolor}Yes%f, %F{$badcolor}No%f, Abort, Edit) "
 
     prompt_yaunj_update_title "zsh" "$titlestr" "%55<...<%~"
     vcs_info
