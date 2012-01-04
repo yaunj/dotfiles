@@ -5,6 +5,10 @@ if [[ $IS_LINUX -eq 1 ]]; then
     alias open=xdg-open
 elif [[ $IS_MAC -eq 1 ]]; then
     alias locatemd='mdfind kMDItemDisplayName \=\= '
+
+    local MACVIM=/Applications/MacVim.app/Contents/MacOS/Vim
+    test -x $MACVIM && alias vim=$MACVIM
+    unset MACVIM
 fi
 
 alias :q=exit
