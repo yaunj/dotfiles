@@ -2,7 +2,14 @@ autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 autoload run-help             # try pressing meta-h while writing a command
 autoload colors; colors;
-eval "$(dircolors -b)"
+
+dircolors &>/dev/null
+if [[ $? -eq 0 ]]; then
+    eval "$(dircolors -b)"
+else
+    # dircolors not available, set up a fallback
+    export LSCOLORS="Gxfxcxdxbxegedabagacad"
+fi
 
 # Add our own functions to fpath and load all of them
 fpath=(~/.zsh/functions $fpath)
