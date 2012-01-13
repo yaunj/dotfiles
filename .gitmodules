@@ -22,3 +22,9 @@
 [submodule "vim/bundle/conque"]
 	path = vim/bundle/conque
 	url = https://github.com/vim-scripts/Conque-Shell.git
+[submodule "modules/zsh"]
+	path = modules/zsh
+	url = https://github.com/yaunj/zsh-config
+[submodule "modules/vim"]
+	path = modules/vim
+	url = https://github.com/yaunj/vim-config

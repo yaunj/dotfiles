@@ -9,12 +9,14 @@ echo "done"
 
 for f in *; do
     [[ "${f}" = "${0}" ]] && continue
+    [[ "${f}" = "modules" ]] && continue
+    [[ "${f:0:6}" = "README" ]] && continue
     link=${HOME}/.${f}
     this=${PWD}/${f}
 
     if [[ -e "${link}" ]]; then
         if [[ -L "${link}" ]]; then
-            end=$(python -c "import os; print os.path.realpath('${f}');")
+            end=$(python -c "import os; print os.path.realpath('${link}');")
 
             if [[ "${end}" != "${this}" ]]; then
                 echo "[FAIL] ${link} points elsewhere. Fix it yourself." >&2
@@ -25,5 +27,13 @@ for f in *; do
     else
         ln -s "${this}" "${link}"
         echo "[ OK ] Created $link" >&2
+    fi
+done
+
+for dir in modules/*; do
+    if [[ -x "${dir}/install.sh" ]]; then
+        cd $dir
+        ./install.sh
+        cd -
     fi
 done
