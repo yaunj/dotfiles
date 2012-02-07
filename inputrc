@@ -1,0 +1,18 @@
+$include /etc/inputrc
+
+set completion-ignore-case on
+set bell-style visible
+
+"\e[5~": history-search-backward
+"\e[6~": history-search-forward
+
+Meta-Rubout: unix-filename-rubout
+
+$if Bash
+    set mark-directories on
+    set mark-symlinked-directories on
+    set visible-stats on
+
+    "\C-x'": "\eb'\ef'"
+    "\C-x\"": "\eb\"\ef\""
+$endif
