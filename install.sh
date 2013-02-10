@@ -1,15 +1,8 @@
 #!/bin/bash
 cd $(dirname $0)
-echo -n "Updating git modules "
-git submodule init                         >/dev/null 2>&1 && echo -n ". "
-git submodule update                       >/dev/null 2>&1 && echo -n ". "
-git submodule foreach git submodule init   >/dev/null 2>&1 && echo -n ". "
-git submodule foreach git submodule update >/dev/null 2>&1 && echo -n ". "
-echo "done"
 
 for f in *; do
     [[ "${f}" = "${0}" ]] && continue
-    [[ "${f}" = "modules" ]] && continue
     [[ "${f:0:6}" = "README" ]] && continue
     link=${HOME}/.${f}
     this=${PWD}/${f}
@@ -27,13 +20,5 @@ for f in *; do
     else
         ln -s "${this}" "${link}"
         echo "[ OK ] Created $link" >&2
-    fi
-done
-
-for dir in modules/*; do
-    if [[ -x "${dir}/install.sh" ]]; then
-        cd $dir
-        ./install.sh
-        cd -
     fi
 done
