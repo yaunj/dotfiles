@@ -1,28 +1,33 @@
-import sys, os
+from __future__ import print_function
+import sys, os, rlcompleter
 
 # Readline with history saving.
 try:
-    import readline, atexit, rlcompleter
+    import readline, atexit
     readline.parse_and_bind('tab: complete')
     histfile = os.path.join(os.path.expandvars('$HOME'), ".pyhistory")
     try:
         readline.read_history_file(histfile)
     except IOError:
-        pass  # It doesn't exist yet.
+        pass # It doesn't exist yet.
 
     def savehist():
         try:
             readline.write_history_file(histfile)
         except:
-            print 'Unable to save Python command history'
+            print('Unable to save Python command history')
     atexit.register(savehist)
 except ImportError:
     pass
 
 # Pretty-print at the command prompt for more readable dicts and lists.
 from pprint import pprint
-import __builtin__
-def mydisplayhook(value, show=pprint, bltin=__builtin__):
+try:
+    _builtins = __import__('__builtin__')
+except ImportError:
+    _builtins = __import__('builtins')
+
+def mydisplayhook(value, show=pprint, bltin=_builtins):
     if value is not None:
         bltin._ = value
         show(value)
