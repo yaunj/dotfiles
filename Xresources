@@ -1,3 +1,7 @@
+! Set window urgent on bell
+Rxvt.urgentOnBell: true
+XTerm*bellIsUrgent: true
+
 Rxvt.background: #000000
 Rxvt.foreground: #dddddd
 Rxvt.scrollBar: true
