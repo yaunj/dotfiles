@@ -13,7 +13,7 @@ URxvt.font: xft:terminus:pixelsize=10
 
 
 ! Black
-*color0:   #333333
+*color0:   #000000
 *color8:   #555753
 
 ! Red
