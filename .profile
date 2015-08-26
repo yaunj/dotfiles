@@ -1,8 +1,6 @@
-HISTFILE=$HOME/.$(basename $SHELL)_history
 HISTSIZE=10000
 SAVEHIST=10000
 
-export PYTHONSTARTUP=$HOME/.pythonrc
 export EDITOR=vim
 export VISUAL=vim
 
@@ -17,6 +15,12 @@ if [ -n "${LESSPIPE}" ]; then
 fi
 unset LESSPIPE
 
-export PATH=~/bin:$PATH
+if [ -f ~/.pythonrc ]; then
+    export PYTHONSTARTUP=~/.pythonrc
+fi
+
+if [ -d ~/bin ]; then
+    export PATH=~/bin:$PATH
+fi
 
 test "$COLORTERM" = "gnome-terminal" && export TERM=xterm-256color
