@@ -21,7 +21,7 @@ Rxvt.keysym.M-s:    perl:keyboard-select:search
 
 ! Solarized dark
 Rxvt.background: #002b36
-Rxvt.foreground: #657b83
+Rxvt.foreground: #cccccc
 Rxvt.fadeColor: #002b36
 Rxvt.cursorColor: #93a1a1
 Rxvt.pointerColorBackground: #586e75
