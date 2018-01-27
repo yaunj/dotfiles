@@ -19,8 +19,7 @@ if [ -f ~/.pythonrc ]; then
     export PYTHONSTARTUP=~/.pythonrc
 fi
 
-if [ -d ~/bin ]; then
-    export PATH=~/bin:$PATH
-fi
+test -d ~/bin && export PATH=~/bin:$PATH
+test -d ~/.local/bin && export PATH=~/.local/bin:$PATH
 
 test "$COLORTERM" = "gnome-terminal" && export TERM=xterm-256color
