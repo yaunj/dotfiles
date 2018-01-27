@@ -7,7 +7,7 @@ Rxvt.scrollBar_right: true
 Rxvt.scrollstyle: plain
 Rxvt.iconFile: /usr/share/icons/Adwaita/256x256/apps/utilities-terminal.png
 
-Rxvt.font: xft:terminus:pixelsize=14
+Rxvt.font: xft:Monospace:pixelsize=12
 Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select
 !Disables the insanely annoying Ctrl+Shift shortcut that enters ISO14755 mode
 Rxvt.iso14755:        False
