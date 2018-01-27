@@ -5,7 +5,7 @@ XTerm*bellIsUrgent: true
 Rxvt.scrollBar: false
 Rxvt.scrollBar_right: true
 Rxvt.scrollstyle: plain
-!Rxvt.iconFile: /usr/share/icons/gnome/scalable/apps/utilities-terminal-symbolic.svg
+Rxvt.iconFile: /usr/share/icons/Adwaita/256x256/apps/utilities-terminal.png
 
 Rxvt.font: xft:terminus:pixelsize=14
 Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select
