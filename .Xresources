@@ -5,10 +5,10 @@ XTerm*bellIsUrgent: true
 Rxvt.scrollBar: false
 Rxvt.scrollBar_right: true
 Rxvt.scrollstyle: plain
-!Rxvt.iconFile: /usr/share/icons/gnome/scalable/apps/utilities-terminal-symbolic.svg
+Rxvt.iconFile: /usr/share/icons/Adwaita/256x256/apps/utilities-terminal.png
 
-Rxvt.font: xft:terminus:pixelsize=14
-Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select
+Rxvt.font: xft:Monospace:pixelsize=12
+Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select,colorscheme
 !Disables the insanely annoying Ctrl+Shift shortcut that enters ISO14755 mode
 Rxvt.iso14755:        False
 Rxvt.saveLines:       2000
@@ -18,43 +18,42 @@ Rxvt.keysym.C-0x2d: perl:font-size:decrease
 Rxvt.keysym.C-0:    perl:font-size:reset
 Rxvt.keysym.C-0x2c: perl:keyboard-select:activate
 Rxvt.keysym.M-s:    perl:keyboard-select:search
+Rxvt.keysym.M-c:    perl:colorscheme:toggle
 
-! Solarized dark
-Rxvt.background: #002b36
-Rxvt.foreground: #657b83
-Rxvt.fadeColor: #002b36
-Rxvt.cursorColor: #93a1a1
-Rxvt.pointerColorBackground: #586e75
-Rxvt.pointerColorForeground: #93a1a1
+! Colors
 
-!! black dark/light
-*color0:   #070707
-*color8:   #555753
+! Solarized light
+#define S_yellow        #b58900
+#define S_orange        #cb4b16
+#define S_red           #dc322f
+#define S_magenta       #d33682
+#define S_violet        #6c71c4
+#define S_blue          #268bd2
+#define S_cyan          #2aa198
+#define S_green         #859900
 
-!! red dark/light
-*color1: #dc322f
-*color9:   #ef2929
+Rxvt.intensityStyles:         false
+Rxvt*background:              #fdf6e3
+Rxvt*foreground:              #657b83
+Rxvt*fading:                  40
+Rxvt*fadeColor:               #fdf6e3
+Rxvt*cursorColor:             #586e75
+Rxvt*pointerColorBackground:  #93a1a1
+Rxvt*pointerColorForeground:  #586e75
 
-!! green dark/light
-*color2: #859900
-*color10:  #8ae234
-
-!! yellow dark/light
-*color3: #b58900
-*color11:  #fce94f
-
-!! blue dark/light
-*color4: #268bd2
-*color12:  #729fcf
-
-!! magenta dark/light
-*color5: #d33682
-*color13:  #ad7fa8
-
-!! cyan dark/light
-*color6: #2aa198
-*color14:  #34e2e2
-
-!! white dark/light
-*color7: #eee8d5
-*color15:  #eeeeec
+*color0:                  #000000
+*color1:                  #dc322f
+*color2:                  #859900
+*color3:                  #b58900
+*color4:                  #268bd2
+*color5:                  #d33682
+*color6:                  #2aa198
+*color7:                  #073642
+*color8:                  #fdf6e3
+*color9:                  #cb4b16
+*color10:                 #93a1a1
+*color11:                 #839496
+*color12:                 #657b83
+*color13:                 #6c71c4
+*color14:                 #586e75
+*color15:                 #002b36
