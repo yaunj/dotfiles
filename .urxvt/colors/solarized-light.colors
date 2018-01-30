@@ -6,10 +6,7 @@
 
 *background:              #FDF6E3
 *foreground:              #657B83
-*fadeColor:               #FDF6E3
 *cursorColor:             #586E75
-*pointerColorBackground:  #93A1A1
-*pointerColorForeground:  #586E75
 
 *color0:                  #EEE8D5
 *color1:                  #DC322F

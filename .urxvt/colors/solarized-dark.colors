@@ -5,11 +5,7 @@
 
 *background:              #002B36
 *foreground:              #839496
-*fading:                  40
-*fadeColor:               #002B36
 *cursorColor:             #93A1A1
-*pointerColorBackground:  #586E75
-*pointerColorForeground:  #93A1A1
 
 *color0:                  #073642
 *color1:                  #DC322F

@@ -46,10 +46,10 @@ Rxvt.color-themes.autosave: 1
 
 Rxvt*background:              #fdf6e3
 Rxvt*foreground:              #657b83
-Rxvt*fadeColor:               #fdf6e3
+!Rxvt*fadeColor:               #fdf6e3
 Rxvt*cursorColor:             #586e75
-Rxvt*pointerColorBackground:  #93a1a1
-Rxvt*pointerColorForeground:  #586e75
+!Rxvt*pointerColorBackground:  #93a1a1
+!Rxvt*pointerColorForeground:  #586e75
 
 *color0:                  #000000
 *color1:                  #dc322f
