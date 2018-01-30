@@ -84,6 +84,10 @@ sub read_commands {
     }
     close($fin);
 
+    if (not exists($commands{'borderColor'}) && exists($commands{'background'})) {
+        $commands{'borderColor'} = $commands{'background'};
+    }
+
     return %commands;
 }
 
