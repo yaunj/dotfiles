@@ -2,23 +2,35 @@
 Rxvt.urgentOnBell: true
 XTerm*bellIsUrgent: true
 
-Rxvt.scrollBar: false
-Rxvt.scrollBar_right: true
-Rxvt.scrollstyle: plain
+Rxvt.termName: rxvt-256color
+Rxvt.saveLines: 2000
 Rxvt.iconFile: /usr/share/icons/Adwaita/256x256/apps/utilities-terminal.png
-
 Rxvt.font: xft:Monospace:pixelsize=12
-Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select,colorscheme
+
 !Disables the insanely annoying Ctrl+Shift shortcut that enters ISO14755 mode
-Rxvt.iso14755:        False
-Rxvt.saveLines:       2000
+Rxvt.iso14755:          False
+Rxvt.scrollWithBuffer:  true
+Rxvt.scrollTtyOutput:   false
+Rxvt.scrollTtyKeypress: true
+Rxvt.scrollBar:         false
+Rxvt.scrollBar_right:   true
+Rxvt.scrollstyle:       plain
+Rxvt.intensityStyles:   false
+Rxvt*fading:            20
+
+Rxvt.perl-ext-common: default,confirm-paste,searchable-scrollback,font-size,keyboard-select,color-themes
 
 Rxvt.keysym.C-0x2b: perl:font-size:increase
 Rxvt.keysym.C-0x2d: perl:font-size:decrease
 Rxvt.keysym.C-0:    perl:font-size:reset
 Rxvt.keysym.C-0x2c: perl:keyboard-select:activate
 Rxvt.keysym.M-s:    perl:keyboard-select:search
-Rxvt.keysym.M-c:    perl:colorscheme:toggle
+Rxvt.keysym.M-C-n:  perl:color-themes:next
+Rxvt.keysym.M-C-p:  perl:color-themes:prev
+
+Rxvt.color-themes.themedir: ~/.urxvt/colors
+Rxvt.color-themes.state-file: ~/.urxvt-theme
+Rxvt.color-themes.autosave: 1
 
 ! Colors
 
@@ -32,10 +44,8 @@ Rxvt.keysym.M-c:    perl:colorscheme:toggle
 #define S_cyan          #2aa198
 #define S_green         #859900
 
-Rxvt.intensityStyles:         false
 Rxvt*background:              #fdf6e3
 Rxvt*foreground:              #657b83
-Rxvt*fading:                  40
 Rxvt*fadeColor:               #fdf6e3
 Rxvt*cursorColor:             #586e75
 Rxvt*pointerColorBackground:  #93a1a1

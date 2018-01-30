@@ -1,0 +1,23 @@
+! seoul256 (light) theme adapted for URxvt
+! append the content of this file to your .Xresources
+*background: #DADADA
+*foreground: #4E4E4E
+*color0: #4E4E4E
+*color1: #AF5F5F
+*color2: #5F885F
+*color3: #AF8760
+*color4: #5F87AE
+*color5: #875F87
+*color6: #5F8787
+*color7: #E4E4E4
+*color8: #3A3A3A
+*color9: #870100
+*color10: #005F00
+*color11: #D8865F
+*color12: #0087AF
+*color13: #87025F
+*color14: #008787
+*color15: #EEEEEE
+*cursorColor: #4E4E4E
+*cursorColor2: #DADADA
+*colorBD: #3A3A3A

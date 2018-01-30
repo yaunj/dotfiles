@@ -1,0 +1,29 @@
+! Solarized color scheme for the X Window System
+!
+! http://ethanschoonover.com/solarized
+
+! Light
+
+*background:              #FDF6E3
+*foreground:              #657B83
+*fadeColor:               #FDF6E3
+*cursorColor:             #586E75
+*pointerColorBackground:  #93A1A1
+*pointerColorForeground:  #586E75
+
+*color0:                  #EEE8D5
+*color1:                  #DC322F
+*color2:                  #859900
+*color3:                  #B58900
+*color4:                  #268BD2
+*color5:                  #D33682
+*color6:                  #2AA198
+*color7:                  #073642
+*color9:                  #CB4B16
+*color8:                  #FDF6E3
+*color10:                 #93A1A1
+*color11:                 #839496
+*color12:                 #657B83
+*color13:                 #6C71C4
+*color14:                 #586E75
+*color15:                 #002B36
