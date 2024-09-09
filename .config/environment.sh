@@ -20,7 +20,4 @@ if [ -f ~/.config/python/init.py ]; then
     export PYTHONSTARTUP=~/.config/python/init.py
 fi
 
-test -d ~/bin && export PATH=~/bin:$PATH
-test -d ~/.local/bin && export PATH=~/.local/bin:$PATH
-
 test "$COLORTERM" = "gnome-terminal" && export TERM=xterm-256color
