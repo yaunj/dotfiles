@@ -1,3 +1,4 @@
+# vim: set ft=sh
 HISTSIZE=10000
 SAVEHIST=10000
 
@@ -10,13 +11,13 @@ if [ $? -ne 0 ]; then
     LESSPIPE=$(which lesspipe.sh)
 fi
 if [ -n "${LESSPIPE}" ]; then
-    export LESSOPEN="| ${LESSPIPE} %s";
-    export LESSCLOSE="| ${LESSPIPE} %s %s";
+    export LESSOPEN="| ${LESSPIPE} %s"
+    export LESSCLOSE="| ${LESSPIPE} %s %s"
 fi
 unset LESSPIPE
 
-if [ -f ~/.pythonrc ]; then
-    export PYTHONSTARTUP=~/.pythonrc
+if [ -f ~/.config/python/init.py ]; then
+    export PYTHONSTARTUP=~/.config/python/init.py
 fi
 
 test -d ~/bin && export PATH=~/bin:$PATH
