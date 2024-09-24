@@ -21,3 +21,7 @@ if [ -f ~/.config/python/init.py ]; then
 fi
 
 test "$COLORTERM" = "gnome-terminal" && export TERM=xterm-256color
+
+if [ -f /etc/ssl/certs/ca-certificates.crt ]; then
+    export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+fi

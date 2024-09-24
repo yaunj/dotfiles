@@ -4,8 +4,8 @@
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+*i*) ;;
+*) return ;;
 esac
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -35,47 +35,37 @@ shopt -s nullglob
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
+## Prompt
+prompt_cmd() {
+    local EXITCODE="$?"
+    local PROMPT_PATH="\w"
+    local GIT_REPO
+    local GIT_PATH REAL_PATH
+    local RETCODE
+    local AWS_PROMPT="${AWS_PROFILE:+(aws:\[\e[1;33m\]${AWS_PROFILE}\[\e[0m\]) }"
+    local VENV_PROMPT="${VIRTUAL_ENV:+(🐍:$(basename "${VIRTUAL_ENV}")) }"
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
-esac
+    if git rev-parse --is-inside-work-tree >&/dev/null; then
+        GIT_PATH="$(git rev-parse --show-toplevel)"
+        GIT_REPO="$(basename "${GIT_PATH}")"
+        REAL_PATH="$(readlink -f "${PWD}")"
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
+        PROMPT_PATH="${GIT_REPO}${REAL_PATH:${#GIT_PATH}}"
     fi
-fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\n\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\n\$ '
-fi
-unset color_prompt force_color_prompt
+    if [ "${EXITCODE}" -ne 0 ]; then
+        RETCODE="\[\e[0;31m\]${EXITCODE}\[\e[0m\] "
+    fi
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+    export GIT_PS1_STATESEPARATOR='' GIT_PS1_SHOWSTASHSTATE=1 GIT_PS1_SHOWDIRTYSTATE=1
+    export GIT_PS1_SHOWUPSTREAM=1 GIT_PS1_SHOWCOLORHINTS=1
+
+    PS1="\A ${VENV_PROMPT}${AWS_PROMPT}\h:\[\033[01;34m\]${PROMPT_PATH}\[\033[0m\]$(__git_ps1)\[\033[00m\]\n${RETCODE}\$ "
+
+    unset GIT_PS1_STATESEPARATOR GIT_PS1_SHOWSTASHSTATE GIT_PS1_SHOWDIRTYSTATE
+    unset GIT_PS1_SHOWUPSTREAM GIT_PS1_SHOWCOLORHINTS
+}
+export PROMPT_COMMAND=prompt_cmd
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -102,22 +92,30 @@ fi
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
 fi
 
 if [ -r ~/.config/environment.sh ]; then
-  source ~/.config/environment.sh
+    source ~/.config/environment.sh
 fi
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
-for extra_path in /usr/local/go/bin ~/go/bin ~/bin ~/.local/bin; do
-  test -d $extra_path && PATH=$extra_path:$PATH
+for extra_path in /usr/local/go/bin ~/go/bin ~/.cargo/bin ~/bin ~/.local/bin; do
+    test -d $extra_path && PATH=$extra_path:$PATH
 done
 export PATH
+
+if command -v aws_completer >/dev/null 2>&1; then
+    complete -C $(command -v aws_completer) aws
+fi
+
+if command -v gh 2>/dev/null; then
+    eval "$(gh completion -s bash)"
+fi
