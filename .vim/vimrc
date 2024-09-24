@@ -1,0 +1,197 @@
+set nocompatible
+
+" Handle older versions of Vim
+if v:version < 800
+    " No support for packages, try to use pathogen
+    silent! call pathogen#infect()
+
+    " Older versions of Vim doesn't have default.vim, emulate:
+    filetype plugin indent on
+    syntax on
+
+    set backspace=indent,eol,start
+    set history=200   " Command history
+    set ruler         " Show cursor position
+    set wildmenu      " Show some autocomplete option in the status bar
+    set incsearch     " find as you type
+else
+    " Newer versions of Vim ship with many sane default settings. Use them.
+    if !has('nvim')
+      unlet! skip_defaults_vim
+      source $VIMRUNTIME/defaults.vim
+    endif
+
+    set scrolloff=0   " I prefer to let the cursor move to top and bottom
+end
+
+let mapleader=" "
+
+set mouse=a  " changed my mind
+
+" Encoding {{{
+set fileformat=unix     " Always UNIX line endings
+set encoding=utf-8      " Somehow not default under Windows :(
+set fileencoding=utf-8
+
+" }}}
+" Appearance {{{
+set bg=light
+try
+    colorscheme PaperColor
+catch
+    colorscheme zenburn
+endtry
+
+" if using GUI
+if has("gui_running")
+    set guioptions-=T   " No toolbar
+    set guioptions-=r   " No scrollbar
+    set guioptions-=L   " No scrollbar
+
+    if has("mac")
+        set guifont=Menlo:h11
+    elseif has("win32") || has("win64")
+        set guifont=Consolas:h10
+    else
+        set guifont=Monospace\ 10
+    endif
+
+    if has("gui_macvim")
+      let macvim_hig_shift_movement = 1
+    endif
+end
+
+set showmatch     " indicate matching paren in insert mode
+set list
+set listchars=tab:▸·,extends:>,precedes:<,trail:·,nbsp:¤
+
+set cursorline
+
+" Statusline format is set in the yaunj_statusline plugin
+set laststatus=2  " always show status line
+set wildmode=longest:full,full " stop on longest common match, fallback to full
+" }}}
+" Searching {{{
+set hlsearch      " hilight search matches
+set ignorecase    " ignore case in search patterns
+set smartcase     " ... unless the pattern has capitals
+set gdefault      " use /g as default for s///-expressions
+
+set isfname-==    " ignore = in pathnames when using gf
+" }}}
+" Indenting {{{
+set smartindent    " Smarter than autoindent ;)
+set softtabstop=-1 " backspace over softtabs
+set shiftwidth=4   " spaces for indent
+set expandtab      " spaces, not tabs
+
+" }}}
+" Formatting and textlength {{{
+set formatoptions=
+set formatoptions+=t " Autowrap using textwidth
+set formatoptions+=c " Autowrap comments, inserting comment leader
+set formatoptions+=r " Insert comment leader while in insert mode
+set formatoptions+=q " Reformat comments with gq
+set formatoptions+=n " Recognize numbered lists
+
+set textwidth=80     " sane default?
+
+" }}}
+" History and undoing {{{
+try
+    if has('win32') || has('win64')
+        set undodir=~/vimfiles/var/undo/
+    else
+        set undodir=~/.vim/var/undo/
+    endif
+    set undofile
+catch
+endtry
+
+" }}}
+" Misc settings {{{
+" Couldn't fit these in someplace else ...
+set visualbell          " don't make noise
+set hidden              " change buffer without saving
+
+" Read manpages through :Man
+so $VIMRUNTIME/ftplugin/man.vim
+
+" Disable swap, viminfo and undofile for tempfiles, and files in shared memory
+augroup swapundoskip
+    autocmd!
+    silent! autocmd BufNewFile,BufReadPre
+        \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
+        \ setlocal noswapfile viminfo=
+    silent! autocmd BufWritePre
+        \ /tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*
+        \ setlocal noundofile
+augroup end
+
+" }}}
+" Mappings {{{
+" Common typos
+map :W :w
+map :Q :q
+
+" Sensible regexes
+nnoremap / /\v
+vnoremap / /\v
+
+" Ctrl-tab to correctly indent line in insert mode
+inoremap <C-tab> <C-o>V=
+
+" reformat text
+nnoremap Q gqap
+vnoremap Q gq
+
+" clear hilighting from search
+nnoremap <leader><Space> :nohl<CR>
+
+" <leader>p as pastetoggle
+nnoremap <leader>p :setlocal paste! paste?<cr>
+
+" Up and down moves through visible lines, not over them.
+nnoremap j gj
+nnoremap k gk
+nnoremap <up> gk
+nnoremap <down> gj
+
+" On some keyboards esc is easy to miss
+inoremap <F1> <ESC>
+vnoremap <F1> <ESC>
+
+" clean trailing whitespace
+nnoremap <leader>W :%s/\s\+$//<CR>:let @/=''<CR>
+
+" Change tab settings
+nnoremap <leader>t2 :setlocal shiftwidth=2 tabstop=2 softtabstop=2<CR>
+nnoremap <leader>t4 :setlocal shiftwidth=4 tabstop=4 softtabstop=4<CR>
+nnoremap <leader>t8 :setlocal shiftwidth=8 tabstop=8 softtabstop=8<CR>
+
+" Emacs bindings for command line
+cnoremap <C-A> <Home>
+cnoremap <C-E> <End>
+cnoremap <C-K> <C-U>
+
+" Move between windows
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-h> <C-W>h
+nnoremap <C-l> <C-W>l
+
+" Buffers
+nnoremap <leader>bn :bn<CR>
+nnoremap <leader>bp :bp<CR>
+nnoremap <leader>bb :b#<CR>
+nnoremap <leader>c :bd<CR>
+nnoremap <leader>B :buffer 
+
+" }}}
+" Settings for plugins {{{
+let g:ale_lint_delay = 1000
+" }}}
+
+" Source local, untracked config, if it exists
+silent! so ~/.vimrc-local
+silent! so ~/.vim/vimrc-local
