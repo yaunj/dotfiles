@@ -22,8 +22,9 @@ kmap('n', ':W', ':w', { noremap = false })
 kmap('n', ':Q', ':q', { noremap = false })
 
 -- Sensible regexes
-nmap('/', '/\\v')
-vmap('/', '/\\v')
+nmap('/', '/\\v', { silent = false })
+vmap('/', '/\\v', { silent = false })
+cmap('%s/', '%s/\\v', { silent = false })
 
 -- Ctrl-tab to correctly indent line in insert mode
 imap('<C-tab>', '<C-o>V=')
@@ -33,7 +34,8 @@ nmap('Q', 'gqap', { desc = '' })
 vmap('Q', 'gq')
 
 -- clear hilighting from search
-nmap('<leader><Space>', ':nohl<CR>')
+-- nmap('<leader><Space>', ':nohl<CR>')
+nmap('<Esc>', '<cmd>nohlsearch<CR>')
 
 -- <leader>p as pastetoggle
 nmap('<leader>p', ':setlocal paste! paste?<cr>', { desc = 'Toggle paste' })
@@ -67,11 +69,20 @@ nmap('<C-k>', '<C-W>k')
 nmap('<C-h>', '<C-W>h')
 nmap('<C-l>', '<C-W>l')
 
+-- Resize windows
+nmap('<C-S-j>', '<C-W>-')
+nmap('<C-S-k>', '<C-W>+')
+nmap('<C-S-h>', '<C-W><lt>')
+nmap('<C-S-l>', '<C-W>>')
+
 -- Buffers
 nmap('<leader>bn', ':bn<CR>', { desc = '[B]uffer [N]ext' })
 nmap('<leader>bp', ':bp<CR>', { desc = '[B]uffer [P]rev' })
 nmap('<leader>bb', ':b#<CR>', { desc = '[B]uffer [B]ack to alternate' })
 nmap('<leader>c', ':bd<CR>')
 
+-- Diagnostics / LSP mappings
+nmap('<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+
 -- Terminal mappings
-tmap('<ESC>', '<C-\\><C-N>')
+tmap('<Esc><Esc>', '<C-\\><C-N>', { desc = 'Exit terminal mode' })

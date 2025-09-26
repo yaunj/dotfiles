@@ -5,8 +5,8 @@ return {
     config = function()
         require('catppuccin').setup({
             integrations = {
-                treesitter = not Config.old_nvim,
-                semantic_tokens = not Config.old_nvim,
+                treesitter = vim.fn.has('win32') ~= 1,
+                -- semantic_tokens = not Config.old_nvim,
             },
         })
 

@@ -1,3 +1,4 @@
+if vim.fn.has 'win32' == 1 then return {} end  -- skip on Windows
 return { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',

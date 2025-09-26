@@ -12,19 +12,13 @@ vim.o.fileencoding = 'utf-8'
 -- }}}
 
 -- Appearance {{{
--- move to colorscheme plugin
---vim.o.bg=light
---try
---    colorscheme PaperColor
---catch
---    colorscheme zenburn
---endtry
-
 vim.o.showmatch = true -- indicate matching paren in insert mode
 vim.o.list = true
 vim.o.listchars = 'tab:▸·,extends:>,precedes:<,trail:·,nbsp:¤'
 
 vim.o.cursorline = true
+vim.o.number = true
+vim.o.signcolumn = 'yes'
 
 -- Statusline format is set in the yaunj_statusline plugin
 vim.o.laststatus = 2 -- always show status line
@@ -51,14 +45,8 @@ vim.o.formatoptions = 'jcroql'
 
 -- }}}
 -- History and undoing {{{
---local current_os = vim.loop.os_uname().sysname
--- seems like the defaults on nvim are sane
---if current_os:match('Windows') then
---	vim.o.undodir='~/vimfiles/var/undo/'
---else
---	vim.o.undodir = '~/.vim/var/undo/'
---end
 vim.o.undofile = true
+vim.o.updatetime = 250
 
 -- }}}
 -- Misc settings {{{
@@ -73,7 +61,7 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'BufReadPre' }, {
     --command = 'setlocal noswapfile viminfo=',
     callback = function(_)
         vim.bo.swapfile = false
-        vim.bo.viminfo = ''
+        vim.g.viminfo = ''
     end,
 })
 vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
