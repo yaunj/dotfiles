@@ -32,6 +32,7 @@ vim.opt.fileencoding = 'utf-8'
 vim.opt.background = 'dark'
 
 -- Appearance
+require('vim._core.ui2').enable()
 vim.opt.showmatch = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '▸·', extends = '>', precedes = '<', trail = '·', nbsp = '¤' }
@@ -152,6 +153,10 @@ map('n', '<leader>f', function()
   require('conform').format({ async = true, lsp_fallback = true })
 end, { desc = 'Format buffer' })
 
+-- Comment (possible these needs to be <C-_> in some terminals
+map('n', '<C-/>', 'gcc', { remap = true, desc = 'Toggle comment line' })
+map('v', '<C-/>', 'gc', { remap = true, desc = 'Toggle comment selection' })
+
 -- Fuzzy finder (fzf-lua)
 map('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
 map('n', '<leader>sg', '<cmd>FzfLua live_grep<CR>', { desc = 'Live grep' })
@@ -161,6 +166,7 @@ map('n', '<leader>ss', '<cmd>FzfLua lsp_document_symbols<CR>', { desc = 'Documen
 map('n', '<leader>sS', '<cmd>FzfLua lsp_workspace_symbols<CR>', { desc = 'Workspace symbols' })
 map('n', '<leader>sd', '<cmd>FzfLua diagnostics_document<CR>', { desc = 'Diagnostics' })
 map('n', '<leader>sh', '<cmd>FzfLua helptags<CR>', { desc = 'Help tags' })
+map('n', '<leader>sk', '<cmd>FzfLua keymaps<CR>', { desc = 'Search keymaps' })
 map('n', '<leader>sr', '<cmd>FzfLua resume<CR>', { desc = 'Resume last search' })
 map('n', 'gd', '<cmd>FzfLua lsp_definitions<CR>', { desc = 'Go to definition' })
 
@@ -277,7 +283,10 @@ require('mini.comment').setup()
 
 -- which-key
 require('which-key').setup({
-  delay = 400
+  delay = 400,
+  preset = 'modern',
+  -- layout = { spacing = 4 },
+  icons = { separator = '=' },
 })
 
 -- conform
@@ -333,7 +342,8 @@ vim.lsp.config('yamlls', {
     yaml = {
       customTags = {
         '!Ref',
-        '!Sub', '!Sub sequence',
+        '!Sub',
+        '!Sub sequence',
         '!GetAtt',
         '!GetAZs',
         '!ImportValue',
