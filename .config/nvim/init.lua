@@ -173,8 +173,20 @@ require('fzf-lua').setup({ 'default' })
 
 -- treesitter: install parsers and enable highlighting
 local ts_parsers = {
-  'bash', 'go', 'gomod', 'hcl', 'terraform', 'json', 'lua', 'python',
-  'yaml', 'markdown', 'markdown_inline', 'dockerfile', 'vim', 'vimdoc',
+  'bash',
+  'dockerfile',
+  'go',
+  'gomod',
+  'hcl',
+  'json',
+  'lua',
+  'markdown',
+  'markdown_inline',
+  'python',
+  'terraform',
+  'vim',
+  'vimdoc',
+  'yaml',
 }
 require('nvim-treesitter').install(ts_parsers)
 
@@ -191,16 +203,53 @@ vim.api.nvim_create_autocmd('FileType', {
 require('nvim-treesitter-textobjects').setup({
   select = {
     lookahead = true,
-    keymaps = {
-      ['af'] = '@function.outer',
-      ['if'] = '@function.inner',
-      ['ac'] = '@class.outer',
-      ['ic'] = '@class.inner',
-      ['aa'] = '@parameter.outer',
-      ['ia'] = '@parameter.inner',
-    },
+    set_jumps = true,
   },
 })
+
+local ts_selections = {
+  ['af'] = '@function.outer',
+  ['if'] = '@function.inner',
+  ['ac'] = '@class.outer',
+  ['ic'] = '@class.inner',
+  ['aa'] = '@parameter.outer',
+  ['ia'] = '@parameter.inner',
+}
+
+for mapping, query in pairs(ts_selections) do
+  map({ 'x', 'o' }, mapping, function()
+    require 'nvim-treesitter-textobjects.select'.select_textobject(query, 'textobjects')
+  end, { desc = query })
+end
+
+local ts_movement = { -- brackets are automatically prepended, [ for prev, ] for next
+  ['f'] = '@function.outer',
+  ['c'] = '@class.outer',
+}
+
+for mapping, query in pairs(ts_movement) do
+  local tsm = require('nvim-treesitter-textobjects.move')
+  map({ 'n', 'x', 'o' }, ']' .. mapping, function()
+    tsm.goto_next_start(query, 'textobjects')
+  end, { desc = 'Next ' .. query })
+  map({ 'n', 'x', 'o' }, (']' .. mapping):upper(), function()
+    tsm.goto_next_end(query, 'textobjects')
+  end, { desc = 'Next end of ' .. query })
+  map({ 'n', 'x', 'o' }, '[' .. mapping, function()
+    tsm.goto_previous_start(query, 'textobjects')
+  end, { desc = 'Prev ' .. query })
+  map({ 'n', 'x', 'o' }, ('[' .. mapping):upper(), function()
+    tsm.goto_previous_end(query, 'textobjects')
+  end, { desc = 'Prev end of ' .. query })
+end
+
+local tss = require('nvim-treesitter-textobjects.swap')
+map('n', '<leader>a', function()
+  tss.swap_next('@parameter.inner')
+end, { desc = 'Swap with next parameter' })
+map('n', '<leader>A', function()
+  tss.swap_previous('@parameter.inner')
+end, { desc = 'Swap with next parameter' })
 
 -- gitsigns
 require('gitsigns').setup({
