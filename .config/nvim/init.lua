@@ -356,7 +356,7 @@ vim.lsp.config('yamlls', {
 })
 
 -- Enable all LSP servers
-vim.lsp.enable({ 'gopls', 'ruff', 'pyright', 'terraformls', 'yamlls' })
+vim.lsp.enable({ 'gopls', 'lua_ls', 'ruff', 'pyright', 'terraformls', 'yamlls' })
 
 -- LSP attach: enable completion
 vim.api.nvim_create_autocmd('LspAttach', {
