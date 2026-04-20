@@ -15,6 +15,7 @@ vim.pack.add({
   gh('lewis6991/gitsigns.nvim'),
   gh('echasnovski/mini.surround'),
   gh('echasnovski/mini.comment'),
+  gh('stevearc/conform.nvim'),
   gh('folke/which-key.nvim'),
   gh('tpope/vim-sleuth'),
   gh('tpope/vim-unimpaired'),
@@ -147,7 +148,9 @@ map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics to loclist' })
 
 -- Format
-map('n', '<leader>f', function() vim.lsp.buf.format({ async = true }) end, { desc = 'Format buffer' })
+map('n', '<leader>f', function()
+  require('conform').format({ async = true, lsp_fallback = true })
+end, { desc = 'Format buffer' })
 
 -- Fuzzy finder (fzf-lua)
 map('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
@@ -277,6 +280,17 @@ require('which-key').setup({
   delay = 400
 })
 
+-- conform
+-- Put this in .nvim.lua to override:
+-- require('conform').formatters_by_ft.python = { 'other_python_formatter' }
+require('conform').setup({
+  formatters_by_ft = {
+    lua = { 'stylua' },
+    go = { 'goimports', 'gofmt' },
+    ['_'] = { 'trim_whitespace' },
+  },
+})
+
 -- ==========================================================================
 -- LSP
 -- ==========================================================================
@@ -369,29 +383,53 @@ vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWinEnter' }, {
   end,
 })
 
--- Go: organize imports + format on save
+vim.g.format_on_save = true
+
+map('n', '<leader>tf',
+  function()
+    if vim.g.format_on_save then
+      vim.g.format_on_save = false
+    else
+      vim.g.format_on_save = true
+    end
+  end,
+  { desc = 'Toggle Format on save' })
+
+-- Generic Format on Save
 vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.go',
   callback = function()
-    local params = vim.lsp.util.make_range_params()
-    params.context = { only = { 'source.organizeImports' } }
-    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, 1000)
-    for _, res in pairs(result or {}) do
-      for _, r in pairs(res.result or {}) do
-        if r.edit then
-          vim.lsp.util.apply_workspace_edit(r.edit, 'utf-8')
+    if not vim.g.format_on_save then return end
+
+    -- 1. Organize Imports: Only if the server explicitly supports it
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+      local caps = client.server_capabilities.codeActionProvider
+      if
+          type(caps) == 'table'
+          and caps.codeActionKinds
+          and vim.tbl_contains(caps.codeActionKinds, 'source.organizeImports')
+      then
+        local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+        ---@diagnostic disable-next-line: inject-field
+        params.context = { only = { 'source.organizeImports' } }
+        local result = client:request_sync('textDocument/codeAction', params, 1000, 0)
+        if result and result.result then
+          for _, r in pairs(result.result) do
+            if r.edit then
+              vim.lsp.util.apply_workspace_edit(r.edit, client.offset_encoding)
+            elseif r.command then
+              vim.lsp.util.execute_command(r.command)
+            end
+          end
         end
       end
     end
-    vim.lsp.buf.format({ async = false })
-  end,
-})
 
--- Terraform: format on save
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.tf',
-  callback = function()
-    vim.lsp.buf.format({ async = false })
+    -- 2. Format the file with conform
+    require('conform').format({
+      bufnr = args.buf,
+      lsp_fallback = true,
+      async = false,
+    })
   end,
 })
 
