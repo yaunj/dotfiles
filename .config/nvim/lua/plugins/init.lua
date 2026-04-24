@@ -19,18 +19,39 @@ require('catppuccin').setup({ flavour = 'macchiato' })
 vim.cmd.colorscheme('catppuccin-macchiato')
 
 -- fzf-lua
-require('fzf-lua').setup({ 'default' })
+require('fzf-lua').setup({
+  'default',
+  files = { formatter = 'path.filename_first' },
+  grep = { formatter = 'path.filename_first' },
+})
+require('fzf-lua').register_ui_select()
+
 map('n', '<C-p>', '<cmd>FzfLua files<CR>', { desc = 'Find files' })
-map('n', '<leader>sg', '<cmd>FzfLua live_grep<CR>', { desc = 'Live grep' })
+map('n', '<leader>sf', '<cmd>FzfLua files<CR>', { desc = '[S]earch [F]iles' })
+map('n', '<leader>sh', '<cmd>FzfLua helptags<CR>', { desc = '[S]earch [H]elp' })
+map('n', '<leader>sw', '<cmd>FzfLua grep_cword<CR>', { desc = '[S]earch current [W]ord' })
+map('n', '<leader>sg', '<cmd>FzfLua live_grep<CR>', { desc = '[S]earch by [G]rep' })
+map('n', '<leader>sd', '<cmd>FzfLua diagnostics_document<CR>', { desc = '[S]earch [D]iagnostics' })
+map('n', '<leader>sr', '<cmd>FzfLua resume<CR>', { desc = '[S]earch [R]esume' })
+map('n', '<leader>s.', '<cmd>FzfLua oldfiles<CR>', { desc = '[S]earch Recent Files ("." for repeat)' })
+map('n', '<leader>sb', '<cmd>FzfLua buffers<CR>', { desc = '[S]earch [B]uffers' })
+map('n', '<leader>sk', '<cmd>FzfLua keymaps<CR>', { desc = '[S]earch [K]eymaps' })
+map('n', '<leader>ss', '<cmd>FzfLua lsp_document_symbols<CR>', { desc = '[S]earch [S]ymbols' })
+map('n', '<leader>sS', '<cmd>FzfLua lsp_workspace_symbols<CR>', { desc = '[S]earch Workspace [S]ymbols' })
+
+-- Quick access aliases
 map('n', '<leader>b', '<cmd>FzfLua buffers<CR>', { desc = 'Buffers' })
+map('n', '<leader>gs', '<cmd>FzfLua git_status<CR>', { desc = 'Git status' })
 map('n', '<leader>/', '<cmd>FzfLua blines<CR>', { desc = 'Buffer lines' })
-map('n', '<leader>ss', '<cmd>FzfLua lsp_document_symbols<CR>', { desc = 'Document symbols' })
-map('n', '<leader>sS', '<cmd>FzfLua lsp_workspace_symbols<CR>', { desc = 'Workspace symbols' })
-map('n', '<leader>sd', '<cmd>FzfLua diagnostics_document<CR>', { desc = 'Diagnostics' })
-map('n', '<leader>sh', '<cmd>FzfLua helptags<CR>', { desc = 'Help tags' })
-map('n', '<leader>sk', '<cmd>FzfLua keymaps<CR>', { desc = 'Search keymaps' })
-map('n', '<leader>sr', '<cmd>FzfLua resume<CR>', { desc = 'Resume last search' })
+
+-- LSP
 map('n', 'gd', '<cmd>FzfLua lsp_definitions<CR>', { desc = 'Go to definition' })
+map('n', 'gr', '<cmd>FzfLua lsp_references<CR>', { desc = 'Go to references' })
+map('n', 'gi', '<cmd>FzfLua lsp_implementations<CR>', { desc = 'Go to implementations' })
+map('n', '<leader>ca', '<cmd>FzfLua lsp_code_actions<CR>', { desc = 'Code actions' })
+
+-- Visual mode grep
+map('v', '<leader>sw', '<cmd>FzfLua grep_visual<CR>', { desc = '[S]earch [W]ord in visual' })
 
 -- treesitter
 require('nvim-treesitter').install({
