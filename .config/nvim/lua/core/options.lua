@@ -1,5 +1,5 @@
 -- Appearance & UI
-require('vim._core.ui2').enable()
+-- require('vim._core.ui2').enable()
 vim.opt.showmatch = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '▸·', extends = '>', precedes = '<', trail = '·', nbsp = '¤' }
@@ -7,6 +7,7 @@ vim.opt.cursorline = true
 vim.opt.wildmode = 'longest:full,full'
 vim.opt.number = true
 vim.opt.background = 'dark'
+-- vim.opt.laststatus = 3  -- global statusline
 
 -- Search
 vim.opt.ignorecase = true
