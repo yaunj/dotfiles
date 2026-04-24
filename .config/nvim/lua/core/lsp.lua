@@ -3,52 +3,8 @@ vim.lsp.config('*', {
   root_markers = { '.git' },
 })
 
--- Server specific settings
-vim.lsp.config('gopls', {
-  settings = {
-    gopls = {
-      analyses = { unusedparams = true },
-      staticcheck = true,
-    },
-  },
-})
-
-vim.lsp.config('pyright', {
-  settings = {
-    pyright = { disableOrganizeImports = true },
-    python = { analysis = { typeCheckingMode = 'basic' } },
-  },
-})
-
-vim.lsp.config('yamlls', {
-  settings = {
-    yaml = {
-      customTags = {
-        '!Ref',
-        '!Sub',
-        '!Sub sequence',
-        '!GetAtt',
-        '!GetAZs',
-        '!ImportValue',
-        '!Select sequence',
-        '!Split sequence',
-        '!Join sequence',
-        '!Equals sequence',
-        '!If sequence',
-        '!Not sequence',
-        '!Or sequence',
-        '!And sequence',
-        '!Condition',
-        '!FindInMap sequence',
-        '!Base64',
-        '!Cidr sequence',
-        '!Transform mapping',
-      },
-    },
-  },
-})
-
 -- Enable servers
+-- Configs in ~/.config/nvim/lsp/
 vim.lsp.enable({ 'gopls', 'lua_ls', 'ruff', 'pyright', 'terraformls', 'yamlls' })
 
 -- LSP attach: enable completion
