@@ -63,6 +63,19 @@ map('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 -- Diagnostics
 map('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Diagnostics to loclist' })
 
+-- Comments
+map('n', '<C-/>', 'gcc', { remap = true, desc = 'Toggle comment line' })
+map('v', '<C-/>', 'gc', { remap = true, desc = 'Toggle comment selection' })
+
+-- Convenience when using omni completion
+map('i', '<C-o>', function()
+  if vim.fn.pumvisible() == 1 then
+    return '<C-n>'
+  else
+    return '<C-o>'
+  end
+end, { expr = true })
+
 -- Toggle Format on Save
 vim.g.format_on_save = true
 map('n', '<leader>tf', function()
@@ -80,20 +93,29 @@ map('n', ']q', '<cmd>cnext<CR>', { desc = 'Next quickfix' })
 map('n', '[l', '<cmd>lprev<CR>', { desc = 'Prev loclist' })
 map('n', ']l', '<cmd>lnext<CR>', { desc = 'Next loclist' })
 
--- Add blank lines
-map('n', '[<space>', "<cmd>put! =repeat(nr2char(10), v:count1)|silent ']<CR>", { desc = 'Add blank line above' })
-map('n', ']<space>', "<cmd>put =repeat(nr2char(10), v:count1)|silent '<CR>", { desc = 'Add blank line below' })
-
--- Bubble lines
-map('n', '[e', '<cmd>move .-2<CR>==', { desc = 'Move line up' })
-map('n', ']e', '<cmd>move .+1<CR>==', { desc = 'Move line down' })
-map('v', '[e', ":move '<-2<CR>gv=gv", { desc = 'Move selection up' })
-map('v', ']e', ":move '>+1<CR>gv=gv", { desc = 'Move selection down' })
-
 -- ==========================================================================
 -- Helper commands (Replacement for vim-eunuch)
 -- ==========================================================================
 vim.api.nvim_create_user_command('SudoWrite', 'w !sudo tee % > /dev/null', { desc = 'Write as sudo' })
+vim.api.nvim_create_user_command('Rename', function(opts)
+  local old_name = vim.api.nvim_buf_get_name(0)
+  local new_name = opts.args
+
+  -- If new_name is just a filename, keep it in the same directory
+  if not new_name:match('[/\\]') then new_name = vim.fn.fnamemodify(old_name, ':h') .. '/' .. new_name end
+
+  -- Rename the file on disk
+  local success, err = os.rename(old_name, new_name)
+
+  if success then
+    -- Update the buffer name in Neovim and reload it
+    vim.api.nvim_buf_set_name(0, new_name)
+    vim.cmd('edit!')
+    vim.api.nvim_command('redrawstatus')
+  else
+    vim.notify('Rename failed: ' .. (err or 'unknown error'), vim.log.levels.ERROR)
+  end
+end, { nargs = 1, complete = 'file', desc = 'Rename current file and buffer' })
 
 -- ==========================================================================
 -- Terminal Toggle
