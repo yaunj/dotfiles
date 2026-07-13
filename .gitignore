@@ -1,0 +1,5 @@
+.config/raycast/**
+.config/jj/repos/**
+.config/gh/hosts.yml
+.config/github-copilot/*
+.config/nushell/history.txt
