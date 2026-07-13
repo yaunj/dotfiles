@@ -44,12 +44,14 @@ setopt complete_in_word
 test -f /etc/zsh_command_not_found && source /etc/zsh_command_not_found
 
 # Formats and setup for vcs_info
-zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+zstyle ':vcs_info:*'    actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+zstyle ':vcs_info:jj:*' actionformats '%F{yellow}%s:%r%f [%F{green}%b%f|%F{red}%a%f]'
 zstyle ':vcs_info:git:*' formats '%F{yellow}%s/%b%f%c%u'
+zstyle ':vcs_info:jj:*' formats '%F{yellow}%s:%r%f %F{green}%b%f %c %u'
 zstyle ':vcs_info:*'     formats '%F{yellow}%s/%b%f'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%F{3}%b:%r%f'
 zstyle ':vcs_info:*' branchformat '%F{5}%b%f'
-zstyle ':vcs_info:*' enable git hg svn
+zstyle ':vcs_info:*' enable jj git hg svn
 zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' unstagedstr " %F{red}-%f"
 zstyle ':vcs_info:*' stagedstr   " %F{green}+%f"
@@ -96,8 +98,8 @@ function precmd()
 
     # If command took three seconds or more: print elapsed time
     if [[ $diff -ge 3 ]]; then
-        local days=$(($(date -u -d @${diff} +'%-j') - 1))
-        local time="$(date -u -d @${diff} +'%-H %-M %-S')"
+        local days=$(($(date -u -r ${diff} +'%-j') - 1))
+        local time="$(date -u -r ${diff} +'%-H %-M %-S')"
         time=(${(s: :)time})
         local elapsed=""
         if [[ "${days}"    -gt 0 ]]; then elapsed="${days}d "; fi

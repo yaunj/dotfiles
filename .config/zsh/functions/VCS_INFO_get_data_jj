@@ -1,0 +1,80 @@
+setopt localoptions NO_shwordsplit
+
+local base=${vcs_comm[basedir]}
+local action branch staged unstaged revision misc
+local _is_working_copy _is_root _is_empty _bookmarks _bookmark_id _parent_id
+
+# --ignore-working-copy is safe here: bookmarks are persisted state
+eval `${vcs_comm[cmd]} log --ignore-working-copy -n 1 --no-graph --color never \
+  -r "coalesce(ancestors(present(@)) & bookmarks(), root())" \
+  -T '
+    separate(" ",
+      "_bookmark_id=" ++ change_id,
+      "_is_working_copy=" ++ current_working_copy,
+      "_is_root=" ++ root,
+      "branch=\"" ++ bookmarks.join(" ") ++ "\"",
+    )
+  '`
+
+# No --ignore-working-copy: forces snapshot so @ reflects on-disk state
+eval `${vcs_comm[cmd]} log -n 1 --no-graph --color never -r "@" \
+  -T '
+    separate(" ",
+      "revision=\"" ++ change_id.shortest() ++ "\"",
+      "_parent_id=\"" ++ parents.map(|c| c.change_id()).join("-") ++ "\"",
+      if(empty, "", "unstaged=true"),
+      if(conflict, "action=conflict")
+    )'`
+
+if [[ $_is_working_copy == "false" && $_bookmark_id != $_parent_id ]]; then
+  staged=true
+fi
+
+if [[ $_is_root == "true" ]]; then
+  branch="root()"
+fi
+
+[[ $action == "conflict" ]] && action='⚡'
+
+if [[ $unstaged == "true" ]]; then
+  local summary m a d changes
+  summary=$(${vcs_comm[cmd]} diff --summary --no-pager --color never 2>/dev/null)
+  read m a d < <(awk '
+    /^M / {m++}
+    /^A / {a++}
+    /^D / {d++}
+    END {print m+0, a+0, d+0}
+  ' <<< "$summary")
+
+  changes=''
+  (( m )) && changes+="M${m}"
+  (( a )) && changes+="${changes:+|}A${a}"
+  (( d )) && changes+="${changes:+|}D${d}"
+  [[ -n $changes ]] && misc="[${changes}]"
+fi
+
+if [[ $_is_root == "false" && -n $_bookmark_id ]]; then
+  local local_ahead
+  local_ahead=$(${vcs_comm[cmd]} log --ignore-working-copy \
+    -r "${_bookmark_id}..@" --count 2>/dev/null)
+  local_ahead=${local_ahead//[[:space:]]/}
+  (( local_ahead > 0 )) && misc+="${misc:+ }↑${local_ahead}"
+
+  local branch_name="${branch%% *}"
+  if [[ -n $branch_name ]]; then
+    local bm_output remote_behind remote_ahead tracking
+    bm_output=$(${vcs_comm[cmd]} bookmark list --all-remotes "$branch_name" 2>/dev/null)
+    remote_behind=0; remote_ahead=0
+    # "behind by N" = remote behind us → we are ahead
+    [[ $bm_output =~ 'behind by ([0-9]+)' ]] && remote_behind=$match[1]
+    # "ahead by N" = remote ahead of us → we are behind
+    [[ $bm_output =~ 'ahead by ([0-9]+)' ]] && remote_ahead=$match[1]
+
+    tracking=''
+    (( remote_behind > 0 )) && tracking+="⇡${remote_behind}"
+    (( remote_ahead > 0 ))  && tracking+="⇣${remote_ahead}"
+    [[ -n $tracking ]] && misc+="${misc:+ }${tracking}"
+  fi
+fi
+
+VCS_INFO_formats "${action}" "${branch}" "${base}" "${staged}" "${unstaged}" "${revision}" "${misc}"

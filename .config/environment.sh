@@ -2,8 +2,8 @@
 HISTSIZE=10000
 SAVEHIST=10000
 
-export EDITOR=vim
-export VISUAL=vim
+export EDITOR=nvim
+export VISUAL=nvim
 
 export LESS="-F -g -i -M -R -S -w -X -z-4"
 LESSPIPE=$(which lesspipe)
