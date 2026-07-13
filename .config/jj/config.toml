@@ -1,0 +1,30 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "Rune Hammersland"
+email = "273190+yaunj@users.noreply.github.com"
+username = "yaunj"
+
+[aliases]
+tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+
+[colors]
+"diff token" = { underline = false}  # remove underlines in diffs
+
+[fix.tools.gofmt]
+patterns = ["glob:'**/*.go'"]
+command = ["gofmt"]
+
+[fix.tools.ruff]
+command = ["ruff", "-", "--stdin-filename=$path"]
+patterns = ["glob:'**/*.py'"]
+
+[fix.tools.terraform]
+command = ["terraform", "fmt", "-"]
+patterns = ["glob:'**/*.tf'"]
+
+[revsets]
+
+[revset-aliases]
+#"trunk()" = "coalesce(present(main@origin), present(master@origin))"
+current = 'trunk()::@'
