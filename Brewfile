@@ -15,8 +15,9 @@ brew "tree-sitter-cli"
 brew "uv"
 
 # LSPs / formatters
-brew "stylua"
 brew "lua-language-server"
+brew "stylua"
+brew "taplo"
 
 # Fonts
 cask "font-ioskeley-mono"
