@@ -28,3 +28,6 @@ patterns = ["glob:'**/*.tf'"]
 [revset-aliases]
 #"trunk()" = "coalesce(present(main@origin), present(master@origin))"
 current = 'trunk()::@'
+
+[ui]
+default-command = "log"
